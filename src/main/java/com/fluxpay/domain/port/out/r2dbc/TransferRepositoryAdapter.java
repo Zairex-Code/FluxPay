@@ -1,0 +1,61 @@
+package com.fluxpay.domain.port.out.r2dbc;
+
+import java.time.LocalDateTime;
+
+import org.springframework.stereotype.Component;
+
+import com.fluxpay.domain.model.Transfer;
+import com.fluxpay.domain.model.TransferStatus;
+import com.fluxpay.domain.port.out.TransferRepositoryPort;
+import com.fluxpay.domain.port.out.r2dbc.entity.TransferEntity;
+import com.fluxpay.domain.port.out.r2dbc.repository.TransferR2dbcRepository;
+
+import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
+
+@Component
+@RequiredArgsConstructor
+public class TransferRepositoryAdapter implements TransferRepositoryPort{
+
+    private final TransferR2dbcRepository repository;
+
+    @Override
+    public Mono<Transfer> save(Transfer transfer) {
+
+        TransferEntity entity = TransferEntity.builder()
+                                                    .id(transfer.getId())
+                                                    .originAccount(transfer.getOriginAccount())
+                                                    .destinationAccount(transfer.getDestinationAccount())
+                                                    .amount(transfer.getAmount())
+                                                    .status(transfer.getStatus().name())
+                                                    .createdAt(transfer.getCreatedAt() != null ? transfer.getCreatedAt() : LocalDateTime.now())
+                                                    .build();
+
+        
+
+        
+        return repository.save(entity).map(this::toDomain);
+    }
+
+    @Override
+    public Mono<Transfer> findById(String id) {
+        return repository.findById(id)
+                                .map(this::toDomain);
+    }
+
+    private Transfer toDomain(TransferEntity entity){
+        Transfer transfer = new Transfer();
+        transfer.setId(entity.getId());
+        transfer.setOriginAccount(entity.getOriginAccount());
+        transfer.setDestinationAccount(entity.getDestinationAccount());
+        transfer.setAmount(entity.getAmount());
+        transfer.setStatus(TransferStatus.valueOf(entity.getStatus()));
+        transfer.setCreatedAt(entity.getCreatedAt());
+        return transfer;
+        
+    }
+
+    
+
+    
+}

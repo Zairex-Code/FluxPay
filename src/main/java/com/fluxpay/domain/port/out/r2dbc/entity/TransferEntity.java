@@ -16,6 +16,9 @@ import java.time.LocalDateTime;
  * Persistence Entity representing the database table structure.
  * we avoid @Data to prevent un predictable equals() and hashCode() behavior
  * which can cause severe issues in collections and persistence contexts
+ * 
+ * Persistence Entity representing the database table structure.
+ * This class belongs strictly to the Infrastructure layer.
  */
 
 @Getter
