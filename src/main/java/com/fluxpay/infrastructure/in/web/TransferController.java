@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fluxpay.domain.model.Transfer;
 import com.fluxpay.domain.port.in.MakeTransferUseCase;
+import com.fluxpay.infrastructure.in.web.dto.TransferRequest;
+import com.fluxpay.infrastructure.in.web.dto.TransferResponse;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/transfers")
@@ -28,11 +31,42 @@ public class TransferController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<Transfer> initiateTransfer(@RequestBody Mono<Transfer> transferRequestMono ) {
+    public Mono<TransferResponse> initiateTransfer(@RequestBody Mono<TransferRequest> requestMono ) {
         
-        // The controller simply recives the stram (Mono) and flatMaps it
-        // to pass the actual data to the Domain Layer.
-        return transferRequestMono.flatMap(transfer-> makeTransferUseCase.execute(transfer));
+        return requestMono
+                        .map(this::toDomain)
+                        .flatMap(makeTransferUseCase::execute)
+                        .map(this::toDto);
+        
+    }
+
+    /**
+     * Helper method to translate Request DTO to pure Domain Model.
+     */
+
+    private Transfer toDomain(TransferRequest request) {
+        return Transfer.builder()
+                .id(UUID.randomUUID().toString())
+                .originAccount(request.originAccount())
+                .destinationAccount(request.destinationAccount())
+                .amount(request.amount())
+                .build();
+    }
+
+
+    /**
+     * Helper method to translate Domain Model to Response DTO
+     */
+
+    private TransferResponse toDto(Transfer domain){
+        return new TransferResponse(
+            domain.getId(),
+            domain.getOriginAccount(),
+            domain.getDestinationAccount(),
+            domain.getAmount(),
+            domain.getStatus() != null ? domain.getStatus().name() : "PENDING",
+            domain.getCreatedAt()
+        );
     }
     
     
