@@ -1,0 +1,35 @@
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fluxpay-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: fluxpay_user
+      POSTGRES_PASSWORD: fluxpay_password
+      POSTGRES_DB: fluxpay_db
+    ports:
+      - "5435:5432"
+    networks:
+      - fluxpay-network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  redis:
+    image: redis:7-alpine
+    container_name: fluxpay-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - fluxpay-network
+    command: redis-server --requirepass fluxpay_redis_pass
+    volumes:
+      - redis_data:/data
+    
+networks:
+  fluxpay-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
