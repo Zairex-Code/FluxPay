@@ -1,4 +1,6 @@
-package com.fluxpay.domain.model;
+package com.fluxpay.domain.port.out;
+
+import com.fluxpay.domain.model.Transfer;
 
 import reactor.core.publisher.Mono;
 
