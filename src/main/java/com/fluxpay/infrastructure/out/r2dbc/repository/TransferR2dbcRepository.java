@@ -1,9 +1,9 @@
-package com.fluxpay.domain.port.out.r2dbc.repository;
+package com.fluxpay.infrastructure.out.r2dbc.repository;
 
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fluxpay.domain.port.out.r2dbc.entity.TransferEntity;
+import com.fluxpay.infrastructure.out.r2dbc.entity.TransferEntity;
 
 /**
  * 

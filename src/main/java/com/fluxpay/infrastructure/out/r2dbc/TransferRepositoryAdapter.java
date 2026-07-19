@@ -1,4 +1,4 @@
-package com.fluxpay.domain.port.out.r2dbc;
+package com.fluxpay.infrastructure.out.r2dbc;
 
 import java.time.LocalDateTime;
 
@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import com.fluxpay.domain.model.Transfer;
 import com.fluxpay.domain.model.TransferStatus;
 import com.fluxpay.domain.port.out.TransferRepositoryPort;
-import com.fluxpay.domain.port.out.r2dbc.entity.TransferEntity;
-import com.fluxpay.domain.port.out.r2dbc.repository.TransferR2dbcRepository;
+import com.fluxpay.infrastructure.out.r2dbc.entity.TransferEntity;
+import com.fluxpay.infrastructure.out.r2dbc.repository.TransferR2dbcRepository;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
