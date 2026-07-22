@@ -1,6 +1,9 @@
 package com.fluxpay.domain.usecase;
 
+import java.time.LocalDateTime;
+
 import com.fluxpay.domain.model.Transfer;
+import com.fluxpay.domain.model.TransferStatus;
 import com.fluxpay.domain.port.in.MakeTransferUseCase;
 import com.fluxpay.domain.port.out.TransferRepositoryPort;
 
@@ -23,6 +26,10 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
         
         // For now, we simply set an initial status and delegate to the outbound port.
         // We use Reactive Streams (Mono) to ensure non-blocking execution.
+
+        transfer.setStatus(TransferStatus.PENDING);
+        transfer.setCreatedAt(LocalDateTime.now());
+
         return Mono.just(transfer)
                 // .flatMap(t -> validateAccounts(t)) -> SAGA step in the future
                 .flatMap(transferRepositoryPort::save);
