@@ -1,5 +1,7 @@
 package com.fluxpay.infrastructure.in.web;
 
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,10 +14,9 @@ import com.fluxpay.domain.port.in.MakeTransferUseCase;
 import com.fluxpay.infrastructure.in.web.dto.TransferRequest;
 import com.fluxpay.infrastructure.in.web.dto.TransferResponse;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/transfers")
@@ -31,12 +32,12 @@ public class TransferController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Mono<TransferResponse> initiateTransfer(@RequestBody Mono<TransferRequest> requestMono ) {
+    public Mono<TransferResponse> initiateTransfer(@Valid @RequestBody Mono<TransferRequest> requestMono ) {
         
         return requestMono
-                        .map(this::toDomain)
-                        .flatMap(makeTransferUseCase::execute)
-                        .map(this::toDto);
+                        .map(this::toDomain) // Convert DTO to Domain (Translate)
+                        .flatMap(makeTransferUseCase::execute) // Pass to Use Case (non-blocking)
+                        .map(this::toDto); // Convert Domain to DTO (Translate back)
         
     }
 
