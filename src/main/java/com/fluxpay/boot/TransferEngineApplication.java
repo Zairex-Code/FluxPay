@@ -1,4 +1,4 @@
-package com.fluxpay.application;
+package com.fluxpay.boot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

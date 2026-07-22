@@ -1,8 +1,8 @@
-package com.fluxpay.domain.usecase;
+package com.fluxpay.application.usecase;
 
+import com.fluxpay.application.port.in.GetTransferUseCase;
+import com.fluxpay.application.port.out.TransferRepositoryPort;
 import com.fluxpay.domain.model.Transfer;
-import com.fluxpay.domain.port.in.GetTransferUseCase;
-import com.fluxpay.domain.port.out.TransferRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;

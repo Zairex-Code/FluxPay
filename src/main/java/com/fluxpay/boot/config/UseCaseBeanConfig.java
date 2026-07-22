@@ -1,13 +1,13 @@
-package com.fluxpay.application.config;
+package com.fluxpay.boot.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.fluxpay.domain.port.in.GetTransferUseCase;
-import com.fluxpay.domain.port.in.MakeTransferUseCase;
-import com.fluxpay.domain.port.out.TransferRepositoryPort;
-import com.fluxpay.domain.usecase.GetTransferInteractor;
-import com.fluxpay.domain.usecase.MakeTransferInteractor;
+import com.fluxpay.application.port.in.GetTransferUseCase;
+import com.fluxpay.application.port.in.MakeTransferUseCase;
+import com.fluxpay.application.port.out.TransferRepositoryPort;
+import com.fluxpay.application.usecase.GetTransferInteractor;
+import com.fluxpay.application.usecase.MakeTransferInteractor;
 
 @Configuration
 public class UseCaseBeanConfig {

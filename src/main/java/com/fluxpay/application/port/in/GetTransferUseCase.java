@@ -1,4 +1,4 @@
-package com.fluxpay.domain.port.in;
+package com.fluxpay.application.port.in;
 
 import com.fluxpay.domain.model.Transfer;
 

@@ -1,11 +1,11 @@
-package com.fluxpay.domain.usecase;
+package com.fluxpay.application.usecase;
 
 import java.time.LocalDateTime;
 
+import com.fluxpay.application.port.in.MakeTransferUseCase;
+import com.fluxpay.application.port.out.TransferRepositoryPort;
 import com.fluxpay.domain.model.Transfer;
 import com.fluxpay.domain.model.TransferStatus;
-import com.fluxpay.domain.port.in.MakeTransferUseCase;
-import com.fluxpay.domain.port.out.TransferRepositoryPort;
 
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;

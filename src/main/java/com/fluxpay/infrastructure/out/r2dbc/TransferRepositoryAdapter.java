@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
 
+import com.fluxpay.application.port.out.TransferRepositoryPort;
 import com.fluxpay.domain.model.Transfer;
 import com.fluxpay.domain.model.TransferStatus;
-import com.fluxpay.domain.port.out.TransferRepositoryPort;
 import com.fluxpay.infrastructure.out.r2dbc.entity.TransferEntity;
 import com.fluxpay.infrastructure.out.r2dbc.repository.TransferR2dbcRepository;
 

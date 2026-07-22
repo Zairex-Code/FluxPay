@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fluxpay.application.port.in.GetTransferUseCase;
+import com.fluxpay.application.port.in.MakeTransferUseCase;
 import com.fluxpay.domain.model.Transfer;
-import com.fluxpay.domain.port.in.GetTransferUseCase;
-import com.fluxpay.domain.port.in.MakeTransferUseCase;
 import com.fluxpay.infrastructure.in.web.dto.TransferRequest;
 import com.fluxpay.infrastructure.in.web.dto.TransferResponse;
 
