@@ -3,8 +3,10 @@ package com.fluxpay.application.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fluxpay.domain.port.in.GetTransferUseCase;
 import com.fluxpay.domain.port.in.MakeTransferUseCase;
 import com.fluxpay.domain.port.out.TransferRepositoryPort;
+import com.fluxpay.domain.usecase.GetTransferInteractor;
 import com.fluxpay.domain.usecase.MakeTransferInteractor;
 
 @Configuration
@@ -22,5 +24,10 @@ public class UseCaseBeanConfig {
     @Bean
     public MakeTransferUseCase makeTransferUseCase(TransferRepositoryPort transferRepositoryPort) {
         return new MakeTransferInteractor(transferRepositoryPort);
+    }
+
+    @Bean
+    public GetTransferUseCase getTransferUseCase(TransferRepositoryPort transferRepositoryPort){
+        return new GetTransferInteractor(transferRepositoryPort);
     }
 }

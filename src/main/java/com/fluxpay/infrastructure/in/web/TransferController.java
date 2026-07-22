@@ -3,6 +3,7 @@ package com.fluxpay.infrastructure.in.web;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fluxpay.domain.model.Transfer;
+import com.fluxpay.domain.port.in.GetTransferUseCase;
 import com.fluxpay.domain.port.in.MakeTransferUseCase;
 import com.fluxpay.infrastructure.in.web.dto.TransferRequest;
 import com.fluxpay.infrastructure.in.web.dto.TransferResponse;
@@ -18,6 +20,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+
 @RestController
 @RequestMapping("/api/v1/transfers")
 @RequiredArgsConstructor
@@ -25,6 +32,7 @@ public class TransferController {
 
     // Dependency Inversion: Depending strictly on the Inbound port (Interface)
     private final MakeTransferUseCase makeTransferUseCase;
+    private final GetTransferUseCase getTransferUseCase;
 
     /**
      * Endpoint to initiate a new transfer
@@ -40,6 +48,15 @@ public class TransferController {
                         .map(this::toDto); // Convert Domain to DTO (Translate back)
         
     }
+
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<TransferResponse>> getTransfer(@PathVariable String id) {
+        return getTransferUseCase.execute(id)
+                .map(this::toDto)
+                .map(ResponseEntity::ok) // Si lo encuentra, devuelve 200 OK
+                .defaultIfEmpty(ResponseEntity.notFound().build()); // Si el Mono está vacío, devuelve 404 Not Found
+    }
+    
 
     /**
      * Helper method to translate Request DTO to pure Domain Model.
