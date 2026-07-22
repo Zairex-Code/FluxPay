@@ -43,16 +43,17 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
                                 .map(this::toDomain);
     }
 
-    private Transfer toDomain(TransferEntity entity){
-        Transfer transfer = new Transfer();
-        transfer.setId(entity.getId());
-        transfer.setOriginAccount(entity.getOriginAccount());
-        transfer.setDestinationAccount(entity.getDestinationAccount());
-        transfer.setAmount(entity.getAmount());
-        transfer.setStatus(TransferStatus.valueOf(entity.getStatus()));
-        transfer.setCreatedAt(entity.getCreatedAt());
-        return transfer;
-        
+    private Transfer toDomain(TransferEntity entity) {
+        // Utilizamos el Patrón Builder para reconstituir el objeto
+        // de forma inmutable, sin utilizar un solo setter.
+        return Transfer.builder()
+                .id(entity.getId())
+                .originAccount(entity.getOriginAccount())
+                .destinationAccount(entity.getDestinationAccount())
+                .amount(entity.getAmount())
+                .status(TransferStatus.valueOf(entity.getStatus()))
+                .createdAt(entity.getCreatedAt())
+                .build();
     }
 
     
