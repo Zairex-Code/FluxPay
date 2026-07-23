@@ -2,6 +2,7 @@ package com.fluxpay.application.port.out;
 
 import com.fluxpay.domain.model.Transfer;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface TransferRepositoryPort {
@@ -21,6 +22,9 @@ public interface TransferRepositoryPort {
      */
 
     Mono<Transfer> findById(String id);
+
+
+    Flux<Transfer> findAll();
 
 
 }

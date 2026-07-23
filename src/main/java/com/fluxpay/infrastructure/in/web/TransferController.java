@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fluxpay.application.port.in.GetAllTransfersUseCase;
 import com.fluxpay.application.port.in.GetTransferUseCase;
 import com.fluxpay.application.port.in.MakeTransferUseCase;
 import com.fluxpay.domain.model.Transfer;
@@ -24,6 +25,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import reactor.core.publisher.Flux;
+
+
+
 
 @RestController
 @RequestMapping("/api/v1/transfers")
@@ -33,6 +38,7 @@ public class TransferController {
     // Dependency Inversion: Depending strictly on the Inbound port (Interface)
     private final MakeTransferUseCase makeTransferUseCase;
     private final GetTransferUseCase getTransferUseCase;
+    private final GetAllTransfersUseCase getAllTransfersUseCase;
 
     /**
      * Endpoint to initiate a new transfer
@@ -56,6 +62,14 @@ public class TransferController {
                 .map(ResponseEntity::ok) // Si lo encuentra, devuelve 200 OK
                 .defaultIfEmpty(ResponseEntity.notFound().build()); // Si el Mono está vacío, devuelve 404 Not Found
     }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Flux<TransferResponse> getMethodName() {
+
+        return getAllTransfersUseCase.execute().map(this::toDto);
+    }
+    
     
 
     /**

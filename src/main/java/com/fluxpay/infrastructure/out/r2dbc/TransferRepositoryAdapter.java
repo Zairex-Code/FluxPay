@@ -11,6 +11,7 @@ import com.fluxpay.infrastructure.out.r2dbc.entity.TransferEntity;
 import com.fluxpay.infrastructure.out.r2dbc.repository.TransferR2dbcRepository;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -40,7 +41,14 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
     @Override
     public Mono<Transfer> findById(String id) {
         return repository.findById(id)
-                                .map(this::toDomain);
+        .map(this::toDomain);
+    }
+
+
+    @Override
+    public Flux<Transfer> findAll() {
+        
+        return repository.findAll().map(this::toDomain);
     }
 
     private Transfer toDomain(TransferEntity entity) {
@@ -55,6 +63,7 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
+
 
     
 
