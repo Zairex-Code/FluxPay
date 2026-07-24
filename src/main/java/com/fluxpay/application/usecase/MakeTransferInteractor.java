@@ -27,8 +27,12 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
     @Override
     public Mono<Transfer> execute(Transfer transfer) {
 
+        log.debug("Initiating transfer processing from origin account: {}", 
+                    transfer != null ? transfer.getOriginAccount() : "null"
+                );
+
         return Mono.justOrEmpty(transfer)
-            .switchIfEmpty(Mono.error(new InvalidTransferException("Transfer request payload cannot be null")))
+            .switchIfEmpty(Mono.error(new InvalidTransferException("Transfer request payload cannot be null"))) //If the input object is null, emit a Mono.error
             .flatMap(this::validateTransfer)
             .flatMap(transferRepositoryPort::save)
             .doOnSuccess(savedTransfer -> 
