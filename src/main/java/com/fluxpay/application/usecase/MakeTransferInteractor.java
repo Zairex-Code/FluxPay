@@ -50,7 +50,7 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
         }
 
         if(transfer.getOriginAccount() != null && transfer.getOriginAccount().equals(transfer.getDestinationAccount())){
-            return Mono.error(new InvalidTransferException("Source and target account cant be the same"));
+            return Mono.error(new InvalidTransferException("Source and target account cannot be the same"));
         }
 
         return Mono.just(transfer);
