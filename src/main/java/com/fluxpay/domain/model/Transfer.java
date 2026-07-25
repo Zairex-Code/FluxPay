@@ -1,6 +1,7 @@
 package com.fluxpay.domain.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class Transfer {
     private String destinationAccount;
     private BigDecimal amount;
     private TransferStatus status;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private LocalDateTime updatedAt;
     
 
