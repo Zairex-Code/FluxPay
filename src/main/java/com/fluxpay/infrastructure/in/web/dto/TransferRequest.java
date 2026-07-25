@@ -16,7 +16,7 @@ public record TransferRequest(
 
     @NotNull(message = "Amount cannot be null")
     @DecimalMin(value = "0.01", message= "Transfer amount must be greater than 0")
-    BigDecimal amount
+    BigDecimal amount,
 
     String description
 ) {
