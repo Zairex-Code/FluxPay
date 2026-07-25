@@ -6,6 +6,7 @@ package com.fluxpay.domain.model;
  */
 public enum TransferStatus {
     PENDING,            // The transfer is registered but not yet validated.
+    PROCESSING,         // Under validation and execution
     FUNDS_RESERVED,     // The origin account has been successfully debited.
     COMPLETED,          // The destination account has been credited. All done.
     FAILED,             // An error occurred during the initial validation.

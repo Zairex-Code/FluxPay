@@ -23,24 +23,50 @@ public class Transfer {
     private final Instant createdAt;
 
 
+
+    // Factory method for creating an initial domain model
+    public static Transfer createInitial(String originAccount, String destinationAccount, BigDecimal amount, String description){
+        return Transfer.builder()
+                .originAccount(originAccount)
+                .destinationAccount(destinationAccount)
+                .amount(amount)
+                .description(description)
+                .status(TransferStatus.PENDING)
+                .createdAt(Instant.now())
+                .build();
+    }
+
+    // Rich Domain Behaviors (DDD Invariants & State Transitions)
+
+    // Immutable SAGA State Transitions
+    public Transfer markAsProcessing(){
+        return this.toBuilder().status(TransferStatus.PROCESSING).build();
+    }
+
+    public Transfer reserveFunds(){
+        return this.toBuilder().status(TransferStatus.FUNDS_RESERVED).build();
+    }
+
+    public Transfer markAsCompleted(){
+        return this.toBuilder().status(TransferStatus.COMPLETED).build();
+    }
+
+    public Transfer MarkAsFailed(){
+        return this.toBuilder().status(TransferStatus.FAILED).build();
+    }
+
+    public Transfer reverse(){
+        return this.toBuilder().status(TransferStatus.REVERSED).build();
+    }
+
+
+    // Invariant business rules
     public boolean isSameAccount(){
         return originAccount != null && originAccount.equalsIgnoreCase(destinationAccount);
     }
 
     public boolean isAmountInvalid(){
         return amount == null || amount.compareTo(BigDecimal.ZERO) <= 0;
-    }
-
-    public Transfer markAsCompleted(){
-        return this.toBuilder()
-                .status(TransferStatus.COMPLETED)
-                .build();
-    }
-
-    public Transfer MarkAsFailed(){
-        return this.toBuilder()
-                .status(TransferStatus.FAILED)
-                .build();
     }
 
 }

@@ -55,6 +55,15 @@ public class TransferController {
         
     }
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Mono<TransferResponse> makeTransfer(@Valid @RequestBody TransferRequest request){
+        return Mono.just(request)
+                .map(this::toDomain)
+                .flatMap(makeTransferUseCase::execute)
+                .map(TransferResponse::fromDomain);
+    }
+
     @GetMapping("/{id}")
     public Mono<ResponseEntity<TransferResponse>> getTransfer(@PathVariable String id) {
         return getTransferUseCase.execute(id)
