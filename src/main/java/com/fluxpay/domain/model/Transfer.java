@@ -12,32 +12,35 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Builder(toBuilder = true)
 public class Transfer {
-    private String id;
-    private String originAccount;
-    private String destinationAccount;
-    private BigDecimal amount;
-    private TransferStatus status;
-    private Instant createdAt;
-    private LocalDateTime updatedAt;
-    
+    private final String id;
+    private final String originAccount;
+    private final String destinationAccount;
+    private final BigDecimal amount;
+    private final TransferStatus status;
+    private final String description;
+    private final Instant createdAt;
 
-    public void markAsCompleted(){
-        if(this.status != TransferStatus.FUNDS_RESERVED){
-            throw new IllegalStateException("Transfer cannot be completed if funds are not reserved first.");
-        }
 
-        this.status = TransferStatus.COMPLETED;
-        this.updatedAt = LocalDateTime.now();
+    public boolean isSameAccount(){
+        return originAccount != null && originAccount.equalsIgnoreCase(destinationAccount);
     }
 
-    public void markAsReversed(){
-        this.status = TransferStatus.REVERSED;
-        this.updatedAt = LocalDateTime.now();
+    public boolean isAmountInvalid(){
+        return amount == null || amount.compareTo(BigDecimal.ZERO) <= 0;
     }
+
+    public Transfer markAsCompleted(){
+        return this.toBuilder()
+                .status(TransferStatus.COMPLETED)
+                .build();
+    }
+
+    public Transfer MarkAsFailed(){
+        return this.toBuilder()
+                .status(TransferStatus.FAILED)
+                .build();
+    }
+
 }
