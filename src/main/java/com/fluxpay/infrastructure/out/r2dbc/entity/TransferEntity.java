@@ -10,6 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -19,11 +20,11 @@ import java.time.LocalDateTime;
 @ToString(exclude = {"amount"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("transfers") 
-public class TransferEntity {
+public class TransferEntity implements Persistable<UUID>{
 
     @Id
     @EqualsAndHashCode.Include
-    private String id;
+    private UUID id;
 
     @Column("origin_account")
     private String originAccount;
@@ -37,6 +38,19 @@ public class TransferEntity {
 
     private String description;
 
+    @Column("created_at")
     private Instant createdAt;
+
+    @Transient
+    @Builder.Default
+    private  boolean newEntity = true;
+
+    @Override
+    public boolean isNew(){
+        return newEntity || id == null;
+    }
+
+
+
 
 }
