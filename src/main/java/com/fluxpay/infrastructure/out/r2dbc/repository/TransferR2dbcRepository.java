@@ -5,12 +5,14 @@ import org.springframework.stereotype.Repository;
 
 import com.fluxpay.infrastructure.out.r2dbc.entity.TransferEntity;
 
+import java.util.UUID;
+
 /**
  * 
- *  Spring Data R"DBC repository for reactive database operations
+ *  Spring Data R2DBC repository for reactive database operations
  */
 
-@Repository
-public interface TransferR2dbcRepository extends ReactiveCrudRepository<TransferEntity, String>{
-    // Custom non-blocking queries can be defined here later using @Query
+
+public interface TransferR2dbcRepository extends ReactiveCrudRepository<TransferEntity, UUID>{
+
 }
