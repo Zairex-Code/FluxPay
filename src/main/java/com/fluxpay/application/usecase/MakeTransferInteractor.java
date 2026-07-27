@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 * Application Interactor that orchestrates the execution of bank transfers
 *
 * Handle requests validation, state transactions (marking as completed)
-* reactive persistence,and operational loggins
+* reactive persistence,and operational logins
 * */
 
 @Slf4j
@@ -30,6 +30,7 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
      * Execute a new Money Transfer transaction reactively
      * Validates domain invariants, marks the transfer as completed, persists the entity via
      * the repository port, and records operational logs
+     *
      * @Param transfer The domain model containing transfer request payload
      * @return A mono emitting the saved and completed Transfer domain model
      * */
