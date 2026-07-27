@@ -30,8 +30,8 @@ jobs:
       - name: Execute Reactive Unit Tests & Generate JaCoCo Coverage
         run: ./gradlew test jacocoTestReport
 
+
       - name: Run SonarQube Scanner & Evaluate Quality Gate
-        env:- name: Run SonarQube Scanner & Evaluate Quality Gate
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
