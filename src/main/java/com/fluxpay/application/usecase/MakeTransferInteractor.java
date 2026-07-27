@@ -21,6 +21,14 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
 
     private final TransferRepositoryPort transferRepositoryPort;
 
+    /**
+     * Execute a new Money Transfer transaction reactively
+     * Validates domain invariants, marks the transfer as completed, persists the entity via
+     * the repository port, and records operational logs
+     * @Param transfer The domain model containing transfer request payload
+     * @return A mono emitting the saved and completed Transfer domain model
+     * */
+
     @Override
     public Mono<Transfer> execute(Transfer transfer) {
 
@@ -33,15 +41,18 @@ public class MakeTransferInteractor implements MakeTransferUseCase {
             .flatMap(this::validateTransfer)
             .map(Transfer::markAsCompleted)
             .flatMap(transferRepositoryPort::save)
-            .doOnSuccess(savedTransfer -> 
-                            log.info("Transfer successfully executed with ID: {}", savedTransfer.getId()))
-            .onErrorResume(InvalidTransferException.class, ex -> {
-                log.error("Domain business rule violation: {} ", ex.getMessage());
-                return Mono.error(ex);
-            });
+            .doOnSuccess(savedTransfer -> log.info("Transfer successfully executed with ID: {}", savedTransfer.getId()))
+            .doOnError(InvalidTransferException.class, ex -> log.error("Domain business rule violation: {}", ex.getMessage()));
         
     }
 
+
+    /*
+    * Validates internal transfer invariants before processing
+    *
+    * @param transfer instance to validate
+    * @return A mono containing the validated transfer, or an error if invalid
+    * */
     private Mono<Transfer>  validateTransfer(Transfer transfer){
         if(transfer.isAmountInvalid()){
             return Mono.error(new InvalidTransferException("Transfer amount must be strictly greater than zero"));
