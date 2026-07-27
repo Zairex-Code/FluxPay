@@ -43,4 +43,18 @@ public class GlobalExceptionHandler {
 
         return problemDetail;
     }
+
+
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleUnexpectedException(Exception ex){
+         log.error("Unhandled internal server error ocurred", ex);
+
+         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                 HttpStatus.INTERNAL_SERVER_ERROR, "An internal server error occurred. Please try again later. ");
+         problemDetail.setTitle("Internal Server Error");
+         problemDetail.setType(URI.create("http://api.fluxpay.com/errors/internal-errors"));
+         problemDetail.setProperty("timestamp", Instant.now());
+
+         return problemDetail;
+    }
 }
