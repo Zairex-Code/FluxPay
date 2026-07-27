@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '4.0.7'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'jacoco'
-    id 'org.sonarqube' version '5.1.0.4882'
+    id 'org.sonarqube' version '5.0.0.4638'
 }
 
 group = 'com.fluxpay'
@@ -11,7 +11,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21) //
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -33,9 +33,9 @@ dependencies {
     runtimeOnly 'org.postgresql:r2dbc-postgresql'
     annotationProcessor 'org.projectlombok:lombok'
 
-    // --- DEPENDENCIAS DE PRUEBAS (TESTING) ---
-    testImplementation 'org.springframework.boot:spring-boot-starter-test' // JUnit 5, Mockito, AssertJ
-    testImplementation 'io.projectreactor:reactor-test'                  // StepVerifier para WebFlux
+    // Dependencias de Pruebas (Testing)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
 
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -52,5 +52,15 @@ jacocoTestReport {
     reports {
         xml.required = true
         html.required = true
+    }
+}
+
+// Configuración nativa del scanner de Sonar
+sonar {
+    properties {
+        property "sonar.projectKey", "fluxpay-transfer-engine"
+        property "sonar.projectName", "FluxPay Transfer Engine"
+        property "sonar.gradle.skipCompile", "true"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
