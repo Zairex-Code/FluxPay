@@ -2,16 +2,14 @@ package com.fluxpay.domain.model;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @Getter
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 public class Transfer {
     private final String id;
@@ -51,7 +49,7 @@ public class Transfer {
         return this.toBuilder().status(TransferStatus.COMPLETED).build();
     }
 
-    public Transfer MarkAsFailed(){
+    public Transfer markAsFailed(){
         return this.toBuilder().status(TransferStatus.FAILED).build();
     }
 

@@ -10,5 +10,10 @@ public enum TransferStatus {
     FUNDS_RESERVED,     // The origin account has been successfully debited.
     COMPLETED,          // The destination account has been credited. All done.
     FAILED,             // An error occurred during the initial validation.
-    REVERSED            // SAGA Compensation: The destination failed, money returned to origin.
+    REVERSED;            // SAGA Compensation: The destination failed, money returned to origin.
+
+    // Helper method to determinate if the state is final
+    public boolean isTerminal(){
+        return this == COMPLETED || this == FAILED || this == REVERSED;
+    }
 }
