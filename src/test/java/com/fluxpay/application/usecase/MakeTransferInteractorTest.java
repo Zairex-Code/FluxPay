@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Mono;
@@ -17,10 +16,13 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for MakeTransferInteractor verifying reactive execution pipelines
+ * and domain validation error scenarios.
+ */
 @ExtendWith(MockitoExtension.class)
 class MakeTransferInteractorTest {
 
@@ -35,9 +37,9 @@ class MakeTransferInteractorTest {
 
 
     @Test
-    @DisplayName("Should execute transfer successfuly when payload is valid")
+    @DisplayName("Should execute transfer successfully when payload is valid")
     void execute_WhenValidTransfer_ShouldReturnSavedTransfer() {
-        // 1. ARRANGE (Preparar el escenario)
+        // 1. ARRANGE
         Transfer inputTransfer = Transfer.builder()
                 .originAccount("ACC-100")
                 .destinationAccount("ACC-200")
@@ -61,12 +63,16 @@ class MakeTransferInteractorTest {
         // ACT AND ASSERT
         StepVerifier.create(makeTransferInteractor.execute(inputTransfer))
                 .expectNextMatches(result ->
-                        "TR-999".equals(result.getId()) && result.getStatus() == TransferStatus.COMPLETED &&
-                                "ACC-100".equals(result.getOriginAccount()) &&
-                                "ACC-200".equals(result.getDestinationAccount()))
+                        "TR-999".equals(result.getId()) &&
+                        result.getStatus() == TransferStatus.COMPLETED &&
+                        "ACC-100".equals(result.getOriginAccount()) &&
+                        "ACC-200".equals(result.getDestinationAccount()))
                 .verifyComplete();
 
-        verify(transferRepositoryPort).save(inputTransfer);
+        verify(transferRepositoryPort).save(argThat(transfer ->
+                transfer.getStatus() == TransferStatus.COMPLETED &&
+                        "ACC-100".equals(transfer.getOriginAccount())
+                ));
     }
 
 

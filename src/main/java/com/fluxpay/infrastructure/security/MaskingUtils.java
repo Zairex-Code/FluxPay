@@ -1,7 +1,5 @@
 package com.fluxpay.infrastructure.security;
 
-import org.apache.kafka.common.protocol.types.Field;
-
 public final class MaskingUtils {
     private MaskingUtils(){}
 
