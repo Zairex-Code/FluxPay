@@ -27,7 +27,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import reactor.core.publisher.Flux;
 
-
+/**
+ * Reactive REST controller exposing HTTP endpoints for bank transfer operations
+ *
+ * Implements Dependency Inversion by depending strictly on application inbound ports
+ */
 
 
 @RestController
@@ -40,12 +44,13 @@ public class TransferController {
     private final GetTransferUseCase getTransferUseCase;
     private final GetAllTransfersUseCase getAllTransfersUseCase;
 
+
     /**
-     * Endpoint to initiate a new transfer
-     * we use WebFlux to handle request in a non-blocking, message-driven way
+     * Initiates a new money transfer transaction reactively.
+     *
+     * @param request Validated HTTP request payload containing transfer details
+     * @return A Mono emitting the created TransferResponse with HTTP status 201 Created
      */
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<TransferResponse> makeTransfer(@Valid @RequestBody TransferRequest request){
@@ -61,12 +66,26 @@ public class TransferController {
 
     }
 
+
+    /**
+     * Retrieves a single transfer by its unique string identifier
+     *
+     * @param id The transfer unique identifier
+     * @return  A Mono emitting ResponseEntity with HTTP 200 ok and payload if found, or HTTP 404 Not Found if missing
+     */
     @GetMapping("/{id}")
-    public Mono<TransferResponse> getTransferById(@PathVariable String id) {
+    public Mono<ResponseEntity<TransferResponse>> getTransferById(@PathVariable String id) {
         return getTransferUseCase.execute(id)
-                .map(TransferResponse::fromDomain);
+                .map(TransferResponse::fromDomain)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Retrieves a reactive stream of all recorded bank transfer.
+     *
+     * @return A Flux emitting TransferResponse items
+     */
     @GetMapping
     public  Flux<TransferResponse> getAllTransfers(){
         return getAllTransfersUseCase.execute()
