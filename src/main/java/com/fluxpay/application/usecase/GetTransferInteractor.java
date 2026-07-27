@@ -18,9 +18,9 @@ public class GetTransferInteractor implements GetTransferUseCase{
     
     private final TransferRepositoryPort transferRepositoryPort;
 
-    /*
+    /**
     *Retrieves a single transfer by its unique identifier
-    *
+    * <p>
     * Validates that the input ID is not blank before querying the repository port
     *
     * @param id The unique transfer identifier string

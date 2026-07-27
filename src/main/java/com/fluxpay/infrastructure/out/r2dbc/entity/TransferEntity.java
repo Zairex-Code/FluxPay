@@ -12,6 +12,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+
+/**
+ * R2DBC database entity mapped to the 'transfers' table
+ *
+ * Implements Persistable to explicitly manage entity newness state
+ * when client-generated UUIDs are used
+ */
+
 @Getter
 @Setter
 @Builder
@@ -29,7 +37,7 @@ public class TransferEntity implements Persistable<UUID>{
     @Column("origin_account")
     private String originAccount;
 
-    @Column("desination_account")
+    @Column("destination_account")
     private String destinationAccount;
 
     private BigDecimal amount;
@@ -44,6 +52,12 @@ public class TransferEntity implements Persistable<UUID>{
     @Transient
     @Builder.Default
     private  boolean newEntity = true;
+
+
+    /**
+     * Determines whether this is new (requires SQL INSERT) or existing (requires SQL UPDATE)
+     * @return true if new entity or ID is null; false otherwise
+     */
 
     @Override
     public boolean isNew(){
