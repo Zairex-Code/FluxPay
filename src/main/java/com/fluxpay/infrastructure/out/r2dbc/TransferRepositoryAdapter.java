@@ -23,6 +23,12 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
 
     private final TransferR2dbcRepository r2dbcRepository;
 
+    /**
+     * Saves a transfer domain entity into PostgresSQL via R2DBC reactively
+     * @param transfer The transfer domain entity
+     * @return A mono emitting the persisted Transfer domain instance
+     */
+
     @Override
     public Mono<Transfer> save(Transfer transfer) {
         return Mono.justOrEmpty(transfer)
@@ -33,6 +39,13 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
                 .doOnError(error -> log.error("Failed to persist transfer in R2DBC database: {}", error.getMessage()));
     }
 
+    /**
+     * Finds a transfer by its unique string identifier
+     *
+     * @param id The unique identifier of the transfer
+     * @return  A mono emitting the found Transfer, or empty if not found or invalid UUID
+     */
+
     @Override
     public Mono<Transfer> findById(String id) {
         return Mono.justOrEmpty(parseUuid(id))
@@ -42,18 +55,32 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
     }
 
 
+    /**
+     * Fetches all transfers recorded in the database
+     *
+     * @return A Flux emitting all Transfer domain entities
+     */
     @Override
     public Flux<Transfer> findAll() {
-
         return r2dbcRepository.findAll()
                 .map(this::toDomain)
                 .doOnError(error -> log.error("Failed to fetch transfers from R2DBC : {}", error.getMessage()));
     }
 
 
+    /**
+     * Converts a Domain Transfer model to a Database Transfer Entity
+     *
+     * Ensures proper UUID generation and flags 'isNew' correctly for Spring Data R2DBC inserts
+     */
     private TransferEntity toEntity(Transfer domain){
         UUID entityId = parseUuid(domain.getId());
-        boolean isNew = (entityId == null);
+        boolean isNew = false;
+
+        if (entityId == null){
+            entityId = UUID.randomUUID();
+            isNew = true;
+        }
 
         return TransferEntity.builder()
                 .id(entityId)
@@ -67,6 +94,9 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
                 .build();
     }
 
+    /**
+     * Converts a Database TransferEntity to Domain Transfer model
+     */
     private Transfer toDomain(TransferEntity entity){
         return Transfer.builder()
                 .id(entity.getId() != null ? entity.getId().toString() : null)
@@ -79,6 +109,9 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
                 .build();
     }
 
+    /**
+     * safely  parses a string into UUID
+     */
     private UUID parseUuid(String uuidStr){
         if (uuidStr == null || uuidStr.isBlank()){
             return null;
@@ -91,6 +124,9 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
         }
     }
 
+    /**
+     * safely converts a database string to a TransferStatus enum
+     */
     private TransferStatus parseStatus(String statusStr){
         if (statusStr == null || statusStr.isBlank()){
             return TransferStatus.PENDING;
@@ -102,8 +138,5 @@ public class TransferRepositoryAdapter implements TransferRepositoryPort{
             return TransferStatus.PENDING;
         }
     }
-
-
-
 
 }
