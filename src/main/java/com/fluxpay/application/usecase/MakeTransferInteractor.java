@@ -13,7 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Mono;
 
-
+/*
+* Application Interactor that orchestrates the execution of bank transfers
+*
+* Handle requests validation, state transactions (marking as completed)
+* reactive persistence,and operational loggins
+* */
 
 @Slf4j
 @RequiredArgsConstructor
