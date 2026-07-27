@@ -15,6 +15,7 @@ public class GetAllTransferInteractor implements GetAllTransfersUseCase{
 
     @Override
     public Flux<Transfer> execute() {
+
         log.debug("Fetching all recorded transfers");
 
         return transferRepositoryPort.findAll();

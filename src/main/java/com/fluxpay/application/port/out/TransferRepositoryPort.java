@@ -24,6 +24,10 @@ public interface TransferRepositoryPort {
     Mono<Transfer> findById(String id);
 
 
+    /**
+     * Retrieves all recorded transfers
+     * @return A Flux emitting all transfers
+     */
     Flux<Transfer> findAll();
 
 
