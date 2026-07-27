@@ -61,6 +61,7 @@ sonar {
     properties {
         property "sonar.projectKey", "fluxpay-transfer-engine"
         property "sonar.projectName", "FluxPay Transfer Engine"
+        property "sonar.organization", "zairex-code"
         property "sonar.host.url", System.getenv("SONAR_HOST_URL") ?: "https://sonarcloud.io"
         property "sonar.gradle.skipCompile", "true"
         property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
