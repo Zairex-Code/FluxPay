@@ -37,5 +37,5 @@ public class TransferKafkaAdapter implements TransferEventPort {
 
     }
 
-    private
+
 }
