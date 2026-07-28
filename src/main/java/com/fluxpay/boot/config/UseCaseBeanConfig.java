@@ -1,5 +1,7 @@
 package com.fluxpay.boot.config;
 
+import com.fluxpay.application.port.out.ExternalBankPort;
+import com.fluxpay.application.port.out.TransferEventPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,17 +17,23 @@ import com.fluxpay.application.usecase.MakeTransferInteractor;
 public class UseCaseBeanConfig {
 
     /**
-     * Creates de MakeTransferUseCase bean
-     * Spring automatically resolves and injects the TransferRepositoryPort
-     * (Which is implemented by our TransferRepositoryAdapter in the Infrastructure)
-     * 
-     * @param transferRepositoryPort the outbound port injected by Spring
-     * @return the pure Java interact ready to be used by the Inbound Adapters
+     * Creates the MakeTransferUseCase bean
+     * Spring automatically resolves and injects_
+     * - TransferRepository (implemented by TransferRepositoryAdapter)
+     * - ExternalBankPort (implemented by ExternalBankAdapter)
+     * - TransEventPort (implemented byTransferKafkaAdapter)
+     *
+     * @param transferRepositoryPort the persistence outbound port
+     * @param externalBankPort the external verification outbound port
+     * @param transferEventPort the messaging event outbound port
+     * @return the pure Java interactor ready to be used by Inbound Adapters
      */
     
     @Bean
-    public MakeTransferUseCase makeTransferUseCase(TransferRepositoryPort transferRepositoryPort) {
-        return new MakeTransferInteractor(transferRepositoryPort);
+    public MakeTransferUseCase makeTransferUseCase(TransferRepositoryPort transferRepositoryPort,
+                                                   ExternalBankPort externalBankPort,
+                                                   TransferEventPort transferEventPort) {
+        return new MakeTransferInteractor(transferRepositoryPort, externalBankPort, transferEventPort);
     }
 
     @Bean
