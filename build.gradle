@@ -20,36 +20,58 @@ repositories {
 }
 
 dependencies {
-    // Aplicación y Web Reactiva
+    // =========================================================================
+    // 🌐 WEBFLUX & CORE REACTIVO
+    // =========================================================================
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    // Kafka Reactivo
+    // =========================================================================
+    // 💾 PERSISTENCIA & DATOS REACTIVOS (R2DBC, PostgreSQL, Redis)
+    // =========================================================================
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:r2dbc-postgresql'
+
+    // =========================================================================
+    // 📡 MENSAJERÍA & EVENTOS (Kafka Reactivo)
+    // =========================================================================
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'io.projectreactor.kafka:reactor-kafka'
 
-    // Lombok y Base de Datos
-    compileOnly 'org.projectlombok:lombok'
-    runtimeOnly 'org.postgresql:postgresql'
-    runtimeOnly 'org.postgresql:r2dbc-postgresql'
-    annotationProcessor 'org.projectlombok:lombok'
-
-    // Dependencias de Pruebas (Testing)
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
-
-    // Resilience4j para Spring Boot 3 / WebFlux
+    // =========================================================================
+    // 🛡️ RESILIENCIA & TOLERANCIA A FALLOS (Resilience4j)
+    // =========================================================================
     implementation 'io.github.resilience4j:resilience4j-reactor:2.2.0'
     implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
 
+    // =========================================================================
+    // 📊 OBSERVABILIDAD & MÉTRICAS (Bloque 7 - Actuator & Prometheus)
+    // =========================================================================
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // =========================================================================
+    // 🛠️ HERRAMIENTAS DE DESARROLLO (Lombok)
+    // =========================================================================
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // =========================================================================
+    // 🧪 PRUEBAS Y COBERTURA (Testing, StepVerifier & Mocks)
+    // =========================================================================
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
 
     testCompileOnly 'org.projectlombok:lombok'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+// =============================================================================
+// ⚙️ TAREAS DE EJECUCIÓN DE PRUEBAS & REPORTE DE COBERTURA (JaCoCo)
+// =============================================================================
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -62,6 +84,10 @@ jacocoTestReport {
         html.required = true
     }
 }
+
+// =============================================================================
+// 🔍 CONFIGURACIÓN DE INSPECCIÓN Y QUALITY GATE (SonarCloud)
+// =============================================================================
 sonar {
     properties {
         property "sonar.projectKey", "fluxpay-transfer-engine"
