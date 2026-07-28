@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public record TransferCreatedEvent(
-        String transferId,
+        String id,
         String originAccount,
         String destinationAccount,
         BigDecimal amount,
