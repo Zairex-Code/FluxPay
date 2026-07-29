@@ -1,4 +1,4 @@
-package com.fluxpay.infrasreucture.in.web;
+package com.fluxpay.infrastructure.in.web;
 
 
 import com.fluxpay.application.port.in.GetAllTransfersUseCase;
