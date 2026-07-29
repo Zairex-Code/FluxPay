@@ -1,6 +1,7 @@
 package com.fluxpay.boot.config;
 
 import com.fluxpay.application.port.out.ExternalBankPort;
+import com.fluxpay.application.port.out.TransferCachePort;
 import com.fluxpay.application.port.out.TransferEventPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,8 +38,9 @@ public class UseCaseBeanConfig {
     }
 
     @Bean
-    public GetTransferUseCase getTransferUseCase(TransferRepositoryPort transferRepositoryPort){
-        return new GetTransferInteractor(transferRepositoryPort);
+    public GetTransferUseCase getTransferUseCase(TransferRepositoryPort transferRepositoryPort,
+                                                 TransferCachePort transferCachePort){
+        return new GetTransferInteractor(transferRepositoryPort, transferCachePort);
     }
 
     @Bean
