@@ -1,6 +1,7 @@
 package com.fluxpay.application.usecase;
 
 import com.fluxpay.application.port.in.GetTransferUseCase;
+import com.fluxpay.application.port.out.TransferCachePort;
 import com.fluxpay.application.port.out.TransferRepositoryPort;
 import com.fluxpay.domain.exception.InvalidTransferException;
 import com.fluxpay.domain.model.Transfer;
@@ -11,12 +12,15 @@ import reactor.core.publisher.Mono;
 
 /**
  * Application Interactor responsible for querying transfer records by ID
+ *
+ * Combines defensive domain input validation with a high-performance Cache-Aside strategy.
  */
 @Slf4j
 @RequiredArgsConstructor
 public class GetTransferInteractor implements GetTransferUseCase{
-    
+
     private final TransferRepositoryPort transferRepositoryPort;
+    private final TransferCachePort transferCachePort;
 
     /**
     *Retrieves a single transfer by its unique identifier
@@ -35,7 +39,10 @@ public class GetTransferInteractor implements GetTransferUseCase{
         return Mono.justOrEmpty(id)
                 .filter(transferId -> !transferId.isBlank())
                 .switchIfEmpty(Mono.error(new InvalidTransferException("Transfer ID cannot be null or empty")))
-                .flatMap(transferRepositoryPort::findById)
+                .flatMap(validId -> transferCachePort.get(validId)
+                        .switchIfEmpty(transferRepositoryPort.findById(validId)
+                                .flatMap(transfer -> transferCachePort.put(transfer).thenReturn(transfer)))
+                )
                 .doOnSuccess(transfer -> {
                     if (transfer == null){
                         log.debug("No transfer found with ID: {}", id);
@@ -46,6 +53,6 @@ public class GetTransferInteractor implements GetTransferUseCase{
 
     }
 
-    
-    
+
+
 }
